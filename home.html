@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>HomePage</title>
+<style>
+</style>
+</head>
+<body>
+<div>
+<button onclick="addThread()">addThread</button>
+</div>
+
+<div id="divs" style="visibility: hidden">
+    <div>1
+        <div class="c">2</div>
+        <div>3</div>
+    </div>
+    <div class="c">4</div>
+    <div>5
+        <div>6</div>
+        <div class="c">7</div>
+    </div>
+    <div>8</div>
+</div>
+<script>
+function log()
+{
+    console.log.apply(this,arguments);
+}
+
+/* 查看 splice slice */
+// let arr=[1,2,3,4,5,6];
+// log(arr.splice(1,2,3,4,55));
+// log(arr);
+
+// log(arr.splice(-2,2,22,33));
+// log(arr);
+
+// log(arr.slice(1,4));
+// log(arr);
+
+
+var d1=document.getElementById("divs");
+var d2=document.getElementsByClassName("c");
+// log(d2.length);
+// log(d1.innerHTML);
+// log(d1.childNodes[1].innerHTML);
+
+
+/* dom 操控 模拟多线程*/
+
+function DivUtil(){}
+DivUtil.prototype.counter=0;
+DivUtil.prototype.creatDiv=function(){
+  var div=document.createElement('div');
+  div.style.background='#ffff00';
+  document.body.appendChild(div);
+  return div;
+}
+var divUtil=new DivUtil();
+Thread=function(){}
+Thread.prototype.start=function(){
+  var div=divUtil.creatDiv();
+  if(div.id>=10){
+    div.innerHTML="只允许起10个线程，看看你的CPU，撑到爆！";
+    return;
+  }
+  var num=div.id;
+  setInterval(function(){
+    div.innerHTML="第"+div.id+"个线程运行中..."+(num++);
+  },100);
+}
+
+function addThread(){
+  var thread=new Thread();
+  thread.start();
+}
+
+/* 探寻 reduce
+*reduce第一个参数 匿名函数 可以接受4个参数，分别代表 prev、next、index、arr
+*reduce如果有第二个参数,则该参数将直接变为第一个参数（匿名函数）的prev
+*/
+
+totals=0;
+function getTotals(arr)
+{
+  arr.reduce(function(a,b,c,d){
+      log(a);
+      log(b);
+      log("=====");
+      a(b);
+      //totals+=a(b);
+      return a;
+
+  },function(){totals+=arguments[0];});
+
+  return function(){
+    return totals;
+  }
+}
+
+//log("total:",getTotals([1,2,3])());
+//log("total:",getTotals([10,20,30])());
+
+
+/* 上下文 */
+
+var number=2;
+var obj={
+  number:4,
+  fn1:(function(){
+    this.number *=2;
+    log(this);
+    log("window.number 1:",window.number);
+    number=number*2;
+    log("number NaN:",number);
+    log("obj number:",this.number);
+    log("===");
+    var number=3;
+    return function(){
+      this.number *=2;
+      log(this);
+      number*=3;
+      log("number3:",number);
+      log("window.number 2:",window.number);
+    }
+  })
+};
+
+//var fn1=obj.fn1();
+//fn1();
+//alert(obj.number);
+
+/* 实现 map */
+function maps(fn)
+{
+  if(typeof(fn)=="function")
+  {
+    var temp=[];
+    for(var i=0;i<this.length;i++)
+    {
+      temp.push(fn.call(this,this[i],i,this));
+    }
+    return temp;
+  }else{return this;}
+}
+
+Array.prototype.maps=maps;
+
+
+// var map=new maps();
+// log(maps.__proto__,maps.constructor,maps.__proto__.constructor);
+// log(map.__proto__,map.constructor,map.__proto__.constructor);
+// log(maps.prototype,maps.prototype.constructor,maps.prototype.constructor.__proto__);
+
+
+var arr=[1,2,3];
+//log(maps.apply(arr,arguments));
+
+var arr2=arr.map(function(x){
+  return x*x;
+});
+
+//log(arr2);
+var arr3=arr.maps(function(x,y,z){
+    //console.log(y);
+    //console.log(z);
+    return x*2;
+});
+
+//log(arr3);
+
+/* 探寻并实现 reduce */
+
+var items = [1,2,3,4,5];
+var items2=[{sum:1},{sum:10},{sum:20},{sum:20},{sum:20},{sum:20}];
+var items3=[function(){return 10;},function(){return 20;},function(){return 30;},40];
+
+// our reducer function
+var reducer = function(s,item) {
+   //s.sum = s.sum + item;
+  //console.log(s,item);
+  return item;//s;
+};
+
+// do the job
+var total = items.reduce(reducer);
+
+//log(total); // {sum:1130}
+
+
+//实现reduce
+function reduces(fn)
+{
+  if(!fn || typeof(fn)!=="function"){return null}
+  var ll=this.length;
+  var temp=null;
+  if(ll<2){return this;}
+  //temp=fn.call(this,typeof(this[0])=="function"?this[0]():this[0],typeof(this[1])=="function"?this[1]():this[1]);
+  temp=fn.call(this,this[0],this[1]);
+  for(var i=2;i<ll;i++)
+  {
+    temp=fn.call(this,temp,this[i]);
+  }
+  return temp;
+}
+
+Array.prototype.reduces=reduces;
+
+log(items3.reduces(function(a,b){
+  a=typeof(a)=="function"?a():a;
+  b=typeof(b)=="function"?b():b;
+  return a+b;
+}));
+
+
+/* 实现compose */
+function compose()
+{
+  if(arguments.length<2){return null;}
+  var _args=Array.prototype.slice.apply(arguments).reverse();
+  return(_args.reduces(function(a,b){
+    return b(a);
+  }));
+  //if(typeof(arguments[i])=="function")
+}
+
+var func1=function(a){return a+",this is func 1"};
+var func2=function(a){return a+",this is func 2"};
+var func3=function(a){return a+",this is func 3"};
+var func4=function(a,b){return a+b};
+
+log(compose(func1,func2,func3,func4("this is","func 4")));
+
+/* anonymous recursion 递归修改 */
+
+var config ={
+    a: "1",
+    children: [{
+        a: "11"
+    },
+    {
+        a: "12",
+        children: [{
+            a: "121"
+        }]
+    }]
+};
+(function (config) {
+    if (config.a != undefined) {
+        config.id = config.a;
+        delete config.a;
+    }
+    if(config.children){
+        for (var i = 0; i < config.children.length; i++) {
+            arguments.callee(config.children[i]);
+        }
+    }
+})(config)
+
+//log(config);
+
+/* 根据class获取*/
+
+function byClass(node,cname)
+{
+  var arrs=arguments[2];
+  var lists=node.childNodes;
+  //log(lists);
+  for(var i=0;i<lists.length;i++)
+  {
+    if(lists[i].className==cname)
+    {
+      arrs.push(lists[i]);
+    }
+    if(lists[i].childNodes.length>0)
+    {
+      byClass(lists[i],cname,arrs);
+    }
+  }
+  return arrs;
+}
+
+var div=byClass(document.getElementById("divs"),"c",[]);
+for(var i=0;i<div.length;i++)
+{
+  //log(div[i].innerHTML);
+}
+
+/* bind */
+
+var ob={
+  names:"my ob",
+  getName:function(){
+      log("getName:",this);
+    return function(){
+      log("return function:",this);
+      return this.names;
+    }.bind(this)
+  }
+};
+
+//log(ob.getName()());
+
+/* prototype inherit 原型和继承*/
+function Car(name)
+{
+  this.name=name;
+  this.showName=function()
+  {
+    log(this.name);
+  }
+}
+
+Car.prototype.gas=function()
+{
+  log("I am gasing...");
+}
+
+function VW()
+{
+  Car.call(this,"I am VW");
+}
+
+VW.prototype=Car.prototype;//new Car();
+
+var car=new Car("bike");
+var vw=new VW();
+
+// car.gas();
+// car.showName();
+//vw.showName();
+//vw.gas();
+
+/* curring 柯里化*/
+
+var curryWeight = function(fn) {
+    var _args = [];
+    return function() {
+        if (arguments.length === 0) {
+            return fn.apply(null, _args);
+        } else {
+            _args = _args.concat([].slice.call(arguments));
+        }
+        //log(_args);
+    }
+};
+
+var averageWeight = 0;
+var addWeight = curryWeight(function() {
+    var i=0; len = arguments.length;
+    for (i; i<len; i+=1) {
+        averageWeight += arguments[i]/len;
+    }
+});
+
+addWeight(2,2);
+addWeight(3,4);
+addWeight(4);
+
+
+//addWeight();
+//log(averageWeight);
+
+/* object clone 对象复制*/
+function clone(o)
+{
+  var temp={};
+  for(var key in o)
+  {
+    if(typeof(o[key])=="object")
+    {
+      temp[key]=clone(o[key]);
+    }
+    else
+    {
+      temp[key]=o[key];
+    }
+  }
+  return temp;
+}
+
+var bb=clone({1:"aa",2:"bb"});
+//log(bb);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</div>
+</body>
+</html>
