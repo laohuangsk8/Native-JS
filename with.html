@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>js scope</title>
+
+<script type="text/javascript">
+//with 语句通常用来缩短特定情形下必须写的代码量。
+
+person={name:"yhb",age:22,height:175,wife:{name:"lwy",age:21}};
+with(person.wife){
+    console.log(name);
+}
+
+console.log(person.name);
+
+var o = {
+	x:23,
+	onTimeout: function(){
+    	console.log("x:", this.x); // outputs 23
+	},
+	m: function(){
+	    // Keeps instance reference.
+	    var self = this;
+	    setTimeout(function(){
+	       // Gets m scrope.
+	    	self.onTimeout();
+	    }, 1);
+	    with(o)
+	    {
+	    	setTimeout(function(){
+	        	onTimeout();
+	    	}, 1);
+	    }
+	}
+}
+o.m();
+
+</script>
+</body>
+</html>
