@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>js functon</title>
+<style>
+     div{ display: block; background: #ccc;  width: 200px; height: 100px;}
+</style>
+
+
+<body>
+
+<script type="text/javascript">
+
+
+//单例模式
+
+// var creatMask=function(){
+// 	var mask;
+// 	return function(){
+// 		return mask||(mask=document.body.appendChild(document.createElement('div')))
+// 	}
+// }()
+
+// var mask1=creatMask();
+
+
+var singleton=function(fn){
+
+     var result;
+     return function(fn){
+          return result || (result=fn.apply(this,arguments));
+     }
+}()
+
+
+
+
+var xhr=singleton(function(){
+	var xmlhttp_request=new XMLHttpRequest();
+	return xmlhttp_request;
+
+});
+
+console.log(xhr);
+
+var mask1=singleton(function(){
+     return document.body.appendChild(document.createElement("div"));
+});
+
+console.log(mask1);
+
+
+</script>
+</body>
+</html>

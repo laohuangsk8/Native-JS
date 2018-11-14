@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>global</title>
+<style type="text/css">
+body{ background:#000; color:#fff;padding-top:100px;}
+</style>
+<script type="text/javascript" src="core.js"></script>
+<script type="text/javascript">
+
+
+Core.sp(3);
+alert(Core.gp());
+
+
+function Fibonacci(max)
+{
+	var num1=0;
+	var num2=1
+	var num3;
+
+	document.write(num1+"<br />");
+	document.write(num2+"<br />");
+
+	for(var i=3;i<max;i++)
+	{
+		num3=num1+num2;
+		num1=num2;
+		num2=num3;
+		if(num3>max)
+		{
+			break;
+		}
+		document.write(num3+"<br />");
+	}
+
+}
+
+
+Fibonacci(20);
+
+</script>
+</head>
+<body>
+
+
+</body>
+</html>

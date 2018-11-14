@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>js test</title>
+<style type="text/css">
+</style>
+</head>
+<body>
+<p id="p">test p</p>
+<button id="btn1">TEST BUTTON</button>
+<button id="btn2">TEST BUTTON</button>
+
+<script type="text/javascript">
+
+var p = document.getElementById('p');
+p.addEventListener("click",function(){
+
+  //alert(this);
+
+})
+
+
+function calleeDemo(){
+  alert(arguments.callee);
+}
+
+//calleeDemo();
+
+
+
+
+function callerDemo() {
+     if (callerDemo.caller) {
+       var a= callerDemo.caller.toString();
+          alert(a);
+    } else {
+         alert("this is a top function");
+     }
+}
+ function handleCaller(){
+     callerDemo();
+}
+
+//callerDemo();
+//handleCaller();
+
+var curring=function(fn){
+
+	var args=[].slice.call(arguments,1);
+  console.log(args);
+	return function(){
+		var newArgs=args.concat([].slice.call(arguments));
+    console.log(newArgs);
+		return fn.apply(null,newArgs);
+	}
+}
+
+var getMan=curring(function(){
+
+
+	var allMan=[].slice.call(arguments);
+	console.log(allMan.join("=="));
+
+},"old man","buaty");
+
+
+getMan("man1","man2");
+
+console.log("==================");
+
+
+var curs=function(action){
+  var func=function(type){
+    var result="";
+    if(action=="ok")
+    {
+      if(type==1)
+      {
+        result="hello ok 1";
+      }
+      else
+      {
+        result="hellow ok null";
+      }
+    }
+    else
+    {
+      if(type==1)
+      {
+        result="hello 1";
+      }
+      else
+      {
+        result="hellow null";
+      }
+    }
+    console.log(result);
+    return arguments.callee;
+  }
+  return func;
+}
+
+
+curs("ok")(1)(2)(1)(2);
+
+
+
+console.log("=============");
+
+
+var smallKenan = function(action) {
+    var bigKenan = function(doing) {
+        var result = "";
+        if (action === "take drugs") {
+            if (doing === "bathWithGirlFriend") {
+                result = "尖叫，新一，你这个色狼，然后一巴掌，脸煮熟了~";
+            } else if (doing === "pointOutKiller") {
+                result = "新一，这个案子就交给你的，快点找出谁是凶手吧~";
+            }
+        } else {
+            if (doing === "bathWithGirlFriend") {
+                result = "来吧，柯南，一起洗澡吧~";
+            } else if (doing === "pointOutKiller") {
+                result = "小孩子家，滚一边去！";
+            }
+        }
+        console.log(result);
+        return arguments.callee; // 等同于return bigKenan
+    };
+    return bigKenan;
+};
+
+smallKenan("take drugs")("bathWithGirlFriend")("pointOutKiller");
+
+
+//smallKenan("take drugs")("pointOutKiller")("bathWithGirlFriend")("pointOutKiller");
+
+
+if(4&1)
+{
+  //alert("奇数");
+}
+else
+{
+  //alert("no");
+}
+
+
+var number=2;
+var obj={
+  number:4,
+  fn1:(function(){
+    this.number *=2;
+    alert("这是第1个window.number:"+window.number);
+    number=number*2;
+
+    var number=3;
+    return function(){
+      this.number *=2;
+      console.log(this);
+      number*=3;
+      alert(number);
+      alert("这是第2个window.number:"+window.number);
+    }
+  })
+};
+
+//obj.fn1()();
+
+//var fn1=obj.fn1();
+
+
+//fn1();
+
+
+//alert(obj.number);
+
+var ar1=[1,2,3,4,5,6];
+
+
+console.log(ar1);
+console.log(ar1.slice(1));
+console.log(ar1.slice(1,3));
+console.log(ar1.splice(0,1));
+console.log(ar1);
+console.log(ar1.splice(0,1,22,33));
+console.log(ar1);
+
+
+
+
+var ar2=["james",1,2,3,"lilei"];
+var tmp=ar1.concat(ar2);
+console.log(tmp);
+console.log(tmp.filter((item,index)=>tmp.indexOf(item)!==index));
+
+
+function whatDoesItDo(arr){
+  return arr.filter(function(elem, pos){
+    return arr.indexOf(elem)== pos;
+  });
+};
+
+console.log(whatDoesItDo(["1",2,33,3,3,4,2,1]));
+
+
+var addEvent = function(el, type, fn, capture) {
+    if (window.addEventListener) {
+        el.addEventListener(type, function(e) {
+            fn.call(el, e);
+        }, capture);
+    } else if (window.attachEvent) {
+        el.attachEvent("on" + type, function(e) {
+            fn.call(el, e);
+        });
+    } 
+};
+
+
+
+addEvent(document.getElementById("btn1"),"click",function(){
+	alert("clicked");
+},false);
+addEvent(document.getElementById("btn2"),"click",function(){
+	alert("clicked");
+},false);
+
+
+
+var arr = [
+  {"name":"apple", "count": 2},
+  {"name":"orange", "count": 5},
+  {"name":"pear", "count": 3},
+  {"name":"orange", "count": 16},
+];
+   
+var newArr = arr.filter(function(item){
+  return item.name === "orange";
+});
+ 
+ 
+console.log("Filter results:",newArr);
+
+
+// Define the callback function.
+function appendCurrent (previousValue, currentValue) {
+    //return previousValue + "::" + currentValue;
+    return previousValue+"="+currentValue;
+    }
+
+// Create an array.
+var elements = ["abc", "def", 123, 456];
+
+// Call the reduce method, which calls the callback function
+// for each array element.
+var result = elements.reduce(appendCurrent);
+
+console.log(result);
+
+
+
+var oldArr = [{first_name:"Colin",last_name:"Toh"},{first_name:"Addy",last_name:"Osmani"},{first_name:"Yehuda",last_name:"Katz"}];
+ 
+function getNewArr(){
+     
+  return oldArr.map(function(item,index){
+    item.full_name = [item.first_name,item.last_name].join(" ");
+    return item;
+  });
+   
+}
+ 
+console.log(getNewArr());
+
+
+
+
+
+var arr = ["apple","orange","apple","orange","pear","orange"];
+ 
+function getWordCnt(){
+  return arr.reduce(function(prev,next){
+    console.log("prev:",prev);
+    console.log("next:",next);
+    
+    return prev + " " +next;
+  },{});
+}
+
+function getWordCnt2(){
+  return arr.reduce(function(prev,next){
+    console.log("prev:",prev);
+    console.log("next:",next);
+    
+    return prev + " " +next;
+  });
+}
+ 
+console.log(getWordCnt());
+console.log("-------------");
+console.log(getWordCnt2());
+
+
+var curryWeight = function(fn) {
+    var _args = [];
+    return function() {
+        if (arguments.length === 0) {
+            return fn.apply(null, _args);
+        } else {
+            _args = _args.concat([].slice.call(arguments));
+        }
+    }
+};
+
+var averageWeight = 0;
+var addWeight = curryWeight(function() {
+    var i=0; len = arguments.length;
+    for (i; i<len; i+=1) {
+        averageWeight += arguments[i]/len;
+    }
+});
+
+addWeight(2,2);
+addWeight(3,4);
+addWeight(4);
+addWeight();
+
+console.log(averageWeight);
+
+
+
+
+var items = [10, 120, 1000];
+
+// our reducer function
+var reducer = function(s,item) {
+   s.sum = s.sum + item;
+  // console.log(item);
+  return s;
+};
+
+// do the job
+var total = items.reduce(reducer, {sum: 0});
+
+console.log(total); // {sum:1130}
+
+</script>
+
+
+
+
+</body>
+
+</html>

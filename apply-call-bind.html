@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://gttowns.com/static/lib/jquery/core/1.9.1/jquery.min.js"></script>
+<!-- <script src="http://gttowns.com/static/lib/timesheet/timesheet.js"></script> -->
+<!-- <link rel="stylesheet" href="http://gttowns.com/static/lib/timesheet/timesheet.css"> -->
+</head>
+<body>
+<p id="p">BIND THIS P</p>
+
+
+<div id="lists">  
+  
+</div>  
+<div id="timesheet"></div>
+
+<script type="text/javascript">
+// $(function(){
+// 	new Timesheet('timesheet', 2002, 2020, [
+//   ['2002', '09/2012', 'A freaking awesome time', 'lorem'],
+//   ['06/2012', '09/2012', 'Some great memories', 'ipsum'],
+//   ['2003', 'Had very bad luck'],
+//   ['10/2012', '2012', 'At least had fun', 'dolor'],
+//   ['02/2012', '05/2012', 'Enjoyed those times as well', 'ipsum'],
+//   ['07/2005', '09/2005', 'Bad luck again', 'default'],
+//   ['10/2005', '2008', 'For a long time nothing happened', 'dolor'],
+//   ['01/2008', '05/2009', 'LOST Season #4', 'lorem'],
+//   ['01/2009', '05/2009', 'LOST Season #4', 'lorem'],
+//   ['02/2010', '05/2010', 'LOST Season #5', 'lorem'],
+//   ['09/2008', '06/2018', 'FRINGE #1 & #2', 'ipsum']
+// ]);
+// })
+
+
+
+// var cat=location.href.substr(0,location.href.lastIndexOf("/")+1);
+
+// $.ajax({
+// 	url: cat,
+// 	type:'get',
+// 	success:function(rs)
+// 	{
+// 		$("#lists").html(rs);
+// 	},
+//     error: function(e){
+//         console.log(e);
+//     }
+// });
+
+
+/* call*/
+/*
+function add(a,b)
+{
+	alert(a+b);
+}
+function sub(a,b)
+{
+	alert(a-b);
+}
+
+sub.call(add,1,3);
+
+*/
+
+
+/* 方法 */
+/*
+var test=function()
+{
+	var a=3333;//私有属性
+	this.b=100;
+	
+	//公有方法
+	this.says=function()
+	{
+		alert(a);
+	}
+}
+
+//静态方法
+test.gas=function(){alert("gased");};
+
+//原型方法
+test.prototype.steel=function(){alert("I am going");};
+new test().says();
+test.gas();
+new test().steel();
+
+*/
+
+
+
+/* 作用域 this,function,new function */
+
+var Animal=new function()
+{
+	this.name="I am Animal";
+	window.name="hah my name";
+	//this.showName=function(){alert(this.name);}
+	return this.name;
+}
+
+//new function 自己的作用域
+//alert(Animal.name);
+
+
+function mans(name)
+{
+	this.name=name;
+	window.name="window name";
+	//alert(this.name);
+	this.showName=function()
+	{
+		alert("my name is "+this.name);
+	}
+}
+
+
+
+var mans2=function(name)
+{
+	this.name=name;
+	window.name="test name";
+	alert("my name is "+this.name);
+	
+	this.showName=function()
+	{
+		alert("my name is "+this.name);
+	}
+}
+
+//new mans('james').showName(); //实例上下文
+//mans("jim").showName(); //window上下文
+//mans2('lilei'); //window上下文
+//mans2('lilei').showName();
+
+
+
+
+/* call prototype 继承 */
+
+function Car(name)
+{
+	this.name=name;
+	this.showName=function()
+	{
+		alert(this.name);
+	}
+}
+
+Car.prototype.gas=function()
+{
+	alert("I am gasing...");
+}
+
+
+function VW()
+{
+	Car.call(this,"I am VW");
+}
+
+
+VW.prototype=new Car();
+
+var car=new Car();
+var vw=new VW();
+
+// car.gas();
+// vw.showName();
+// vw.gas();
+
+
+/*bind*/
+
+function T()
+{
+  this.id="Object";
+  this.dom=document.getElementById("p");
+}
+
+T.prototype={
+  init:function(){
+    this.dom.onmouseover=function(){
+      console.log("Over-->"+this.id);
+    }
+    this.dom.onmouseout=function(){
+      console.log("Out-->"+this.id);
+    }.bind(this);
+  }
+};
+
+new T().init();
+
+
+
+function func(name,id)
+{
+  console.log(name,id,this);
+}
+var obj="look here";
+
+
+func(" ","-->");
+
+//bind返回改变了上下文的函数
+// var a=func.bind(obj,"bind","-->");
+
+// a();
+
+//call立即执行改变了上下文的函数
+func.call(obj,"call","-->");
+//func.apply(obj,["apply","-->"]);
+
+function f(a,b,c){
+    console.log(a,b,c);
+}
+
+var f_Extend = f.bind(this,"extend_a");//f.bind(null,"extend_a");
+
+//f("A","B","C");
+f_Extend("A","B","C");
+
+f.call(null,"A","B","C");
+
+</script>	
+</body>
+</html>
+

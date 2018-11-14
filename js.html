@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+
+var str="hello world";
+
+//alert(str.split('').join(' '));
+
+var func=new function(){this.a="func";}
+var myfunc=function(x,y)
+{
+	var a="myfunc";
+	alert(this.a);
+	alert(x+y);
+}
+
+//myfunc.call(func,1,2);
+
+function m(m,n)
+{
+	console.log(m+n);
+}
+
+function curry(fn)
+{
+	var outerArgs=Array.prototype.slice.call(arguments,1);
+	console.log(outerArgs);
+	return function(){
+		var innerArgs=Array.prototype.slice.call(arguments),
+			finalArgs=outerArgs.concat(innerArgs);
+		return fn.apply(null,finalArgs);
+		
+	}
+	
+}
+
+//curry(m,1,2,45)();
+var test=curry(function(){var all=[].slice.call(arguments);console.log(all.join(","));},"A","D");
+test("B","c");
+
+//setTimeout(m(1,2),2000);
+
+</script>
+</head>
+<body>
+</body>
+</html>
+

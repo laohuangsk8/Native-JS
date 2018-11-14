@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>js-map-reduce</title>
+
+<script type="text/javascript">
+var oldArr = [{first_name:"Colin",last_name:"Toh"},{first_name:"Addy",last_name:"Osmani"},{first_name:"Yehuda",last_name:"Katz"}];
+
+function getNewa()
+{
+	var newArr=[];
+	for(var i=0,l=oldArr.length;i<l;i++)
+	{
+		var item=oldArr[i];
+		item.full_name=[item.first_name,item.last_name].join(" ");
+		newArr[i]=item;
+	}
+	return newArr;
+}
+
+function checkEnvir(txt)
+{
+	return window.location.href.indexOf(txt)!==-1?true:false;
+}
+
+//console.log(checkEnvir(".dev"),checkEnvir(".qa"),checkEnvir("reduce"));
+
+if(checkEnvir(".dev.") || checkEnvir(".qa.") || checkEnvir("reduce"))
+{
+	//alert("hhaa");
+}
+
+//console.log(getNewa());
+
+
+function getNewb()
+{
+	return oldArr.map(function(item,index){
+		item.full_name=[item.first_name,item.last_name].join(" ");
+		return item;
+	});
+}
+
+//console.log(getNewb());
+
+
+
+var numbers=[{code:574,number:11111111},{code:0574,number:22222222},{code:0574,number:33333333}];
+
+//console.log(numbers);
+
+function getphone()
+{
+	return numbers.map(function(item,index){
+		item.phone=[item.code,item.number].join("-");
+		return item;
+	});
+}
+//console.log(getphone());
+
+
+var arr = ["apple","orange","apple","orange","pear","orange"];
+
+function noPass()
+{
+	return arr.reduce(function(p,n){
+		console.log("prev:",p);
+		console.log("next:",n);
+		return p+" "+n;
+	});
+}
+
+//console.log("no parameter:",noPass());
+
+
+function hasPass()
+{
+	return arr.reduce(function(p,n){
+		console.log("prev:",p);
+		console.log("next:",n);
+		p.sum+=n.length;
+		return p;
+	},{sum:0});
+}
+
+
+console.log("parameter:",hasPass());
+
+function getCount()
+{
+	return arr.reduce(function(p,n){
+		console.log(p,"=",n);
+		p[n]=(p[n]+1)||1;
+		return p;
+	},{apple:100});
+}
+
+//console.log("===================",getCount());
+
+var obj=[{name:"james",age:"30"},{name:"huang",age:"20"}];
+function testReduce()
+{
+	return obj.reduce((p,n)=>{
+		console.log(p,"=",n);
+		p.totals=p.totals+parseInt(n.age);
+		return p;
+
+	},{totals:0});
+}
+function testReduce2()
+{var sum=0;
+	return obj.map((p,n,obj)=>{
+		//console.log(p,"=",n,"=",obj);
+		p["totals"]=parseInt(p.age);
+		return p;
+	});
+}
+//console.log("===================",testReduce2());
+
+
+
+
+function calculateExponent(base, exponent)
+{
+    if (exponent === 1)
+    {
+    		console.log("111");
+        return base;
+    }
+    else
+    {
+    	console.log("now=",base, exponent - 1);
+        return base * calculateExponent(base, exponent - 1);
+
+    }
+}
+
+
+//console.log(calculateExponent(7, 3));
+
+// ajax.open("POST", "/docs/DocDetailLogOperate.jsp", true);
+// 	ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+// 	ajax.send("docid="+docid+"&operation="+operation+"&istop="+istop+"&topstartdate="+topstartdate+"&topenddate="+topenddate);
+//    	ajax.onreadystatechange = function()
+//    	{
+// 		if (ajax.readyState == 4 && ajax.status == 200)
+// 	  	{
+// 			try
+// 			{
+// 				var reistop = "";
+// 				var reistop = ajax.responseText.replace(/(^\s*)|(\s*$)/g, "");
+// 				if(operation == "top"&&istop=="1"&&reistop=="1")
+// 					alert("文档置顶成功!")
+// 				else if(operation == "top"&&istop=="1"&&reistop!="1")
+// 					alert("文档置顶失败!")
+// 				else if(operation == "notop"||istop!="1")
+// 					alert("取消置顶成功!")
+// 			}
+// 			catch(e)
+// 			{
+// 				return false// 			}
+//       	}
+//       }
+
+
+var items = [10, 20, 30];
+
+// our reducer function
+var reducer = function(sumSoFar, item)
+{
+	sumSoFar.sum=sumSoFar.sum+item; 
+	return sumSoFar;
+};
+
+// do the job
+var total = items.reduce(reducer, {sum:0});
+
+//console.log(total); // 1130
+
+
+
+function outerFn() {
+    var outerVar = {a:0};
+    setOut=()=>{
+    	outerVar.a++;
+    	console.log(outerVar.a);
+    };
+    function innerFn() {
+        console.log('hello');
+    }
+    //return innerFn;
+};
+// outerFn();
+// setOut();
+// setOut();
+// setOut();
+
+
+
+</script>
+
+
+
+</body>
+</html>

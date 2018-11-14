@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+<title>angular controller communication</title>
+<script type="text/javascript" src="angular.js"></script>
+<script type="text/javascript">
+var app=angular.module("myApp",[]);
+
+app.controller('selfCtrl',function($scope){
+	$scope.click=function(){
+		$scope.$broadcast('to-child','child data');
+		$scope.$emit('to-parent',$scope.names);
+	};
+});
+
+app.controller('parentCtrl',function($scope){
+	$scope.$on('to-parent',function(event,data){
+		console.log('parentCtrl',data);
+	});
+});
+
+app.controller('childCtrl',function($scope){
+	$scope.$on('to-child',function(event,data){
+		console.log('childCtrl',data);
+	});
+});
+
+
+</script>
+</head>
+
+<body ng-app="myApp">
+
+<div ng-controller="parentCtrl">
+
+	<div ng-controller="selfCtrl">
+		<input type="text" ng-model="names" />
+		<a ng-click="click()">click me</a>
+
+		<div ng-controller="childCtrl"></div>
+		
+	</div>
+</div>
+
+
+
+
+</body>
+</html>

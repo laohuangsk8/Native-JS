@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>js-angular-promise</title>
+<style>
+
+</style>
+<script type="text/javascript" src="angular.js"></script>
+<script type="text/javascript">
+
+var app=angular.module("myApp",[]);
+
+
+app.factory("myFactory",function(){
+	var artist="laohuang";
+	var factory={};
+	factory.getArtist=function(){
+		return artist;
+	}
+	return factory;
+});
+
+app.controller("factoryCtrl",function($scope,myFactory){
+	$scope.artist=myFactory.getArtist();
+});
+
+
+app.service("myService",function(){
+	var artist="james";
+	this.getArtist=function(){
+		return artist;
+	}
+});
+
+app.controller("serviceCtrl",function($scope,myService){
+	$scope.artist=myService.getArtist();
+});
+
+app.provider("myProvider",function(){
+	this.artist="lilei";
+	this.thingFromCofig="is a boy";
+	this.setName=function(name){
+		this.artist=name;
+	};
+
+	this.$get=function(){
+		var that=this;
+		return{
+			getArtist:function(){
+				return that.artist;
+			},
+			thingOnCofig:that.thingFromCofig
+		}
+	}
+});
+
+
+app.controller("providerCtrl",function($scope,myProvider){
+	$scope.artist=myProvider.getArtist();
+	$scope.thingFromCofig=myProvider.thingOnCofig;
+});
+
+app.config(function(myProviderProvider){
+	myProviderProvider.thingFromCofig="is a girl";
+	myProviderProvider.setName("Hanmeimei");
+
+});
+</script>
+</head>
+<body>
+
+<div ng-app="myApp">
+	<div ng-controller="factoryCtrl">Factory:{{artist}}</div>
+	<div ng-controller="serviceCtrl">Service:{{artist}}</div>
+	<div ng-controller="providerCtrl">Provider:{{artist}} {{thingFromCofig}}</div>
+</div>
+
+
+
+
+
+</body>
+</html>

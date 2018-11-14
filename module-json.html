@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>JS Document</title>
+<style type="text/css">
+body{ background:#000; color:#fff;padding-top:100px;}
+</style>
+<script type="text/javascript">
+
+function Mans(name,age)
+{
+	this.name=name;
+	this.sayHello=function(){
+		document.write("Hello,I am "+this.name);
+	}
+}
+
+james=new Mans("james");
+//james.sayHello();
+
+
+function Driving()
+{
+	this.drive=function(){
+		document.write("<br />I can drive");
+	}
+}
+Driving.Gas=function(){
+
+	document.write("<br />Gassed");
+};
+
+
+Driving.prototype=new Mans("Lilei");
+
+Driving.prototype.cluch=function(){
+	document.write("<br />I steped the cluch");
+	}
+
+var drive1=new Driving();
+
+drive1.sayHello();
+Driving.Gas();
+drive1.drive();
+drive1.cluch();
+
+
+var storage=window.localStorage;
+if(!storage.getItem("pageLoadCount")) storage.setItem("pageLoadCount",0);
+storage.pageLoadCount=parseInt(storage.pageLoadCount)+1;
+if(storage.pageLoadCount%2==1) storage.pageLoadCount=parseInt(storage.pageLoadCount)+30;
+document.write("<br />"+storage.pageLoadCount);
+
+var users={name:"james",age:"25",sex:"male"};
+storage.setItem("users",JSON.stringify(users));
+
+var user=JSON.parse(storage.users)
+
+document.write("<br />"+user.name);
+
+
+(function(ws){
+
+	ws.sayHello=function(){
+		alert("Hello");
+	};
+
+
+})(window)
+
+
+//sayHello();
+
+/* 模块方式 */
+var myModule=(function(){
+	var privateProp="foo";
+
+	function privateMethod(args){
+		alert("I'm privateMethod"+args);
+	}
+
+	return{
+		publicProp:"lilei",
+		publicMethod:function(args){
+			alert("I'm publicMethod"+args);
+		},
+		privilegedMethod:function(){
+			//alert("I'm privilegedMethod");
+			privateMethod(" test");
+		}
+	}
+})();
+
+
+//myModule.privilegedMethod();
+//myModule.privilegedMethod("fsdf");
+
+/* 直接自解释方式
+(function(window){
+
+var a = 'foo', b = 'bar'; 
+
+function private(){ 
+	alert("i am private");
+} 
+
+window.Module = { 
+
+public: function(){ 
+	private();
+} 
+}; 
+
+})(this);
+*/
+
+//alert(prompt("Enter an expression:",""));
+
+/*字符串转json*/
+var json='{"name":"CJ","age":18}';
+
+var data =(new Function("","return "+json))();
+
+//alert(data.name);
+
+
+function a()
+{
+	var i=0;
+	function b(){
+		alert(i++);
+	}
+	return b;
+}
+
+var c=a();
+c();
+
+
+
+
+
+
+</script>
+</head>
+<body>
+
+
+</body>
+</html>

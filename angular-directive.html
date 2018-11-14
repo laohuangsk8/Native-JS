@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+<title>angular directive</title>
+<style type="text/css">
+div{padding: 20px;}
+.replace{ border: 1px solid #cc0;width: 300px}
+.transclude{ border: 1px solid #00c;width: 300px}
+</style>
+
+</head>
+<html ng-app="app">
+<body>
+	<div class="replace">
+		<hello></hello>
+	</div>
+	<div class="transclude">
+		<hello2>
+            <div>原始的内容，还会在这里。</div>
+		</hello2>
+		
+	</div>
+
+<script type="text/javascript" src="angular.js"></script>
+<script type="text/javascript">
+var appModule=angular.module("app",[]);
+appModule.directive("hello",function(){
+	return {
+		restrict:'E',
+		template:'<div>hello world</div>',
+		replace:true
+	};
+});
+
+appModule.directive("hello2",function(){
+	return {
+		restrict:'E',
+		template:'<div>hello world <span ng-transclude></span></div>',
+		transclude:true,
+		replace:true
+	};
+});
+</script>
+</body>
+
+
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<script type="text/javascript">
+n=0;
+function resizeHandler() {
+    console.log(n);
+    n++;
+}
+function throttle(method, context) {
+    clearTimeout(method.tId);
+    method.tId=setTimeout(function(){
+        method.call(context);
+    },500);
+}
+window.onresize = function(){
+    throttle(resizeHandler, window); // 或throttle(resizeHandler);
+};
+</script>
+</body>
+</html>
+

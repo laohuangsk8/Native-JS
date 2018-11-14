@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>js-angular-promise</title>
+<style>
+.bar{width:300px;height:30px;display:inline-block;background: #ccc;}
+.bar2{height: 30px;background:#009a61;width:0;}
+</style>
+<script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="angular.js"></script>
+<script type="text/javascript">
+
+//
+var app=angular.module("myApp",[]);
+app.controller("myController",["$scope","$q",function($scope,$q){
+	
+	$scope.flag=true;
+	$scope.handle=function(){
+		var deferred=$q.defer();
+		var promise=deferred.promise;
+
+		promise.then(function(result){
+			alert("success:"+result);
+		},function(err){
+			alert("failed:"+err);
+		});
+
+		if($scope.flag){
+			deferred.resolve("you are lucky");
+		}else{
+			deferred.reject("sorry,it lost");
+		}
+	}
+}]);
+
+app.controller("myController2",["$scope","$q",function($scope,$q){
+	$scope.flag=true;
+	$scope.handle=function(){
+		var deferred=$q.defer();
+		var promise=deferred.promise;
+
+		promise.then(function(result){
+			result=result+"you have psssed the first then()";
+			$scope.status=result;
+			return result;
+		},function(err){
+			err=err+"failed but you have passed the first then()";
+			$scope.status=err;
+			return err;
+		}).then(function(result){
+			alert("successdd:"+result);
+		},function(err){
+			alert("failed:"+err);
+		});
+
+
+		if($scope.flag){
+			deferred.resolve("you are lucky ");
+		}else{
+			deferred.reject("sorry,it lost ");
+		}
+	}
+
+}]);
+
+
+app.service("myService",function(){
+	var names="lilei";
+	this.getName=function(){
+		return names;
+	}
+});
+
+app.decorator("myService",function($delegate){
+	$delegate.sayName=function(){
+		return "Hi,i am lilei";
+	}
+	return $delegate;
+});
+
+
+app.controller("serviceCtrl",function($scope,myService){
+	$scope.names=myService.getName();
+	$scope.say=myService.sayName();
+});
+
+
+
+
+app.factory("tpService",["$q","$http",function($q,$http){
+	var getPullRequest=function(){
+		var deferred=$q.defer();
+		var promise=deferred.promise;
+		var progress;
+		$http.get("http://tp.com/api-list.php").success(function(rs){
+			var result=[];
+			var arri = 1;
+			
+			var pushd=function(){
+				result.push(rs.data[arri]);
+				progress=(arri/rs.data.length)*100;
+				progress=progress.toFixed();
+
+				arri+=1;
+				if(arri>rs.data.length){
+					clearInterval(mytime);
+					deferred.resolve(result);
+				}
+				deferred.notify(progress);
+			};
+			var mytime=setInterval(function(){pushd()},8);
+			
+		}).
+		error(function(err){
+			deferred.reject(err);
+		});
+		return promise;
+	}
+	return {getPullRequest:getPullRequest};
+}]);
+
+
+
+app.controller("tpCtrl",["$scope","tpService",function($scope,tpService){
+	$scope.name="get tp data";
+	$scope.show=true;
+	tpService.getPullRequest().then(function(result){
+		$scope.data=result;
+	},function(err){
+		$scope.data=err;
+	},function(progress){
+		$scope.progress=progress;
+		$scope.bar2={"width":progress+"%"};
+		$scope.show=false;
+	});
+}]);
+
+
+</script>
+</head>
+<body>
+
+<div ng-app="myApp">
+
+	<div ng-controller="myController">
+		<label for="flag">success
+			<input id="flag" type="checkbox" ng-model="flag" /><br />
+		</label>
+		<hr />
+		<button ng-click="handle()">Click Me</button>
+	</div>
+
+
+	<div ng-controller="myController2">
+		<label for="flag2">success
+			<input id="flag2" type="checkbox" ng-model="flag" /><br />
+		</label>
+		<div ng-cloak>{{status}}</div>
+		<hr />
+		<button ng-click="handle()">Click Me</button>
+	</div>
+
+	<div ng-controller="serviceCtrl">{{names+"=="+say}}</div>
+
+
+	<div ng-controller="tpCtrl">
+		<h1>{{name}}</h1>
+		<h2>Progress:<div class="bar"><div class="bar2" ng-style="bar2"></div></div><font id="progress"></font> {{progress}} %</h2>
+		<h3 ng-show="show" style="font-size:40px">Please wait a moment...</h3>
+		<p ng-repeat="person in data">{{person.name}}</p>
+	</div>	
+</div>
+
+
+
+
+
+</body>
+</html>

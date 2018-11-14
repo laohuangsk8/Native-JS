@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>js test</title>
+<style type="text/css">
+  html{
+    height:100%;
+  }
+  body{
+    height:100%;
+  }
+  #mydiv{
+    width:300px;
+    height:300px;
+    background-color: #ff7400;
+  }
+  #ctxMenu{
+    background-color: #ff7400;
+    list-style-type: none;
+    position: absolute;
+    padding:0px;
+    border:1px solid #000;
+    visibility: hidden;
+  }
+</style>
+
+    
+<script type="text/javascript">
+function Dog(){
+  this.wow = function(){
+    alert("Wow");
+  }
+  this.yelp = function(){
+    this.wow();
+  }
+}
+
+function madDog(){};
+
+madDog.prototype=new Dog();
+
+madDog.prototype.yelp=function(){
+  setInterval(this.wow(),500);
+}
+var test=new madDog();
+//test.yelp(); 
+
+
+var Class = {
+    create: function() {
+    return function() {
+      this.initialize.apply(this, arguments);
+      }
+    }
+}
+
+Class.create();
+
+var vehicle=function() {
+      this.initialize.apply(this, arguments);
+      // this.initialize=function(type){
+      //   alert(type);
+      // }
+    };
+
+
+
+vehicle.prototype={
+    initialize:function(type){
+      this.type=type;
+    },
+    showSelf:function(){
+        alert("this vehicle is "+ this.type);
+    }
+};
+
+
+var moto=new vehicle("Moto");
+//moto.initialize("fsdf");
+//moto.showSelf();
+
+//alert(vehicle.constructor);
+
+function Circle(radius){
+  this.r = radius;
+  this.des = "圆形";
+  this.showInfo = function(){
+    alert("这是一个"+this.des);
+  }
+}
+
+//alert(Circle);
+
+function f1(){
+  var n=999;
+  nAdd=function(){n+=1};
+  function f2(){
+    alert(n);
+  }
+  return f2;
+  }
+
+var result=f1();
+//result(); // 999
+//nAdd();
+//result(); // 1000
+
+
+// function closure(){
+
+//   this.age=20;
+//   this.say=function(){
+//     alert(this.age);
+//   }
+// };
+
+//var c1=new closure();
+
+//c1.say();
+
+
+(function(w){
+  w.age=20;
+  w.say=function(){
+    alert(w.age);
+  };
+  w.set=function(age){
+    w.age=age;
+  }
+
+})(window)
+
+
+set(22);
+say();
+console.log(test.__proto__);
+
+
+//closure
+
+function foo(x)
+{
+  var tmp=3;
+  return function(y){
+    console.log(x+y+(++tmp));
+  }
+}
+
+var bar=foo(2);
+bar(2);
+bar(2);
+bar(2);
+
+
+
+function foo2(x)
+{
+  var tmp=3;
+  return function(y){
+    console.log(x+y+tmp);
+    x.memb=x.memb?x.memb+1:1;
+    console.log("x.memb="+x.memb);
+  }
+}
+
+var age=new Number(2);
+var bar=new foo2(age);
+bar(2);
+bar(2);
+bar(2);
+
+</script>
+
+</head>
+<body>
+
+<div class="outer">
+	<div class="title">你好世界！</div>
+	<!-- <img src="laohuang.jpg" /> -->
+</div>
+
+<div id="mydiv"></div>
+    <h2 id="show"></h2>
+    <input type="text" id="txt"><span id="help"></span>
+    <ul id="ctxMenu">
+      <li>上传</li>
+      <li>下载</li>
+      <li>新建</li>
+      <li>取消</li>
+    </ul>
+    <script type="text/javascript">
+      var $=function(id){
+        return document.getElementById(id);
+      };
+      var h2=$("show");
+      var ctx=$("ctxMenu");
+      var txt=$("txt");
+      var help=$("help");
+      /*
+      txt.onfocus=function(){
+        help.innerHTML="请输入金额";
+      }
+      txt.onkeydown=function(event){
+        help.innerHTML="";
+        var code=event.keyCode;
+        if(!(code>=48&&code<=57||code>=96&&code<=105||code==46||code==8||code==13||code==37||code==39||code==110||code==190)){
+          event.preventDefault();
+        }
+      }
+      */
+      document.body.oncontextmenu=function(event){
+        event.preventDefault();
+        var x=event.pageX;
+        var y=event.pageY;
+        ctx.style.left=x+"px";
+        ctx.style.top=y+"px";
+        ctx.style.visibility="visible";
+      }
+      document.body.onclick=function(){
+        ctx.style.visibility="hidden";
+      }
+      /*
+      document.body.onmousemove=function(event){
+        var x=event.pageX;
+        var y=event.pageY;
+        h2.innerHTML=x+":"+y;
+      }
+      */
+      window.onbeforeunload=function(){
+        var v=$("txt").value;
+        if(v){
+          return "";
+        }
+      }
+      $("mydiv").onclick=function(){
+        $("show").innerHTML="click";
+      };
+      $("mydiv").ondblclick=function(){
+        $("show").innerHTML="dblclick";
+      };
+      $("mydiv").onmouseover=function(){
+        $("show").innerHTML="mouseover";
+        this.style.backgroundColor="#2d2d2d";
+      };
+      $("mydiv").onmouseout=function(){
+        $("show").innerHTML="mouseout";
+        this.style.backgroundColor="pink";
+      }
+    </script>
+
+
+<!-- <div class="content-box"></div>
+<div class="padding-box"></div>
+<div class="border-box"></div> -->
+</body>
+
+</html>
