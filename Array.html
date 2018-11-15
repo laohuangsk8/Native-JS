@@ -20,17 +20,38 @@ let max = arr[0];
 for (let i = 0; i < arr.length - 1; i++) {
     max = max < arr[i+1] ? arr[i+1] : max
 }
+//console.log(max);
+
 //数组sort()
-
 arr.sort((num1, num2) => {
-    return num1 - num2 < 0
+    //return num1 - num2 < 0
 })
-arr[0]
-//数组reduce
 
-arr.reduce((num1, num2) => {
-    return num1 > num2 ? num1 : num2}
-)
+
+//数组reduce
+//var arr=arr.reduce((num1, num2) => {return num1 > num2 ? num1 : num2});
+//console.log(arr);
+
+//冒泡排序
+function bubbleSort(arr){
+    var i = arr.length, j;
+    var tempExchangVal;
+    while (i > 0) {
+        for (j = 0; j < i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                tempExchangVal = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = tempExchangVal;
+            }
+        }
+        i--;
+    }
+    return arr;
+}
+
+var arr = [3, 2, 4, 9, 1, 5, 7, 6, 8];
+var arrSorted = bubbleSort(arr);
+console.log(arrSorted);
 </script>
 </body>
 </html>
